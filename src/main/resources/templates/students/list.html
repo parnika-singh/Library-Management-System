@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/header :: *">
+<body>
+<h2>Students</h2>
+<a href="/students/register">Register Student</a>
+<table border="1">
+    <tr><th>Name</th><th>Contact</th><th>Registered</th></tr>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.contact}"></td>
+        <td th:text="${student.registrationDate}"></td>
+    </tr>
+</table>
+</body>
+</html>

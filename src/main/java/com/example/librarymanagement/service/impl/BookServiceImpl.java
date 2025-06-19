@@ -1,5 +1,18 @@
 package com.example.librarymanagement.service.impl;
 
+import com.example.librarymanagement.dto.BookDTO;
+import com.example.librarymanagement.model.Book;
+import com.example.librarymanagement.exception.ResourceNotFoundException;
+import com.example.librarymanagement.repository.BookRepository;
+import com.example.librarymanagement.service.interfaces.BookService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -13,26 +26,59 @@ public class BookServiceImpl implements BookService {
     public BookDTO addBook(BookDTO bookDTO) {
         Book book = objectMapper.convertValue(bookDTO, Book.class);
         book.setAvailableQuantity(book.getQuantity());
-        Book saved = bookRepository.save(book);
-        return objectMapper.convertValue(saved, BookDTO.class);
+        return objectMapper.convertValue(bookRepository.save(book), BookDTO.class);
+    }
+
+    @Override
+    public BookDTO updateBook(Long id, BookDTO bookDTO) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+
+        book.setTitle(bookDTO.getTitle());
+        book.setAuthor(bookDTO.getAuthor());
+        book.setIsbn(bookDTO.getIsbn());
+        book.setQuantity(bookDTO.getQuantity());
+        book.setAvailableQuantity(bookDTO.getAvailableQuantity());
+
+        return objectMapper.convertValue(bookRepository.save(book), BookDTO.class);
+    }
+
+    @Override
+    public void deleteBook(Long id) {
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
+        if (book.getAvailableQuantity() < book.getQuantity()) {
+            throw new RuntimeException("Cannot delete book while it is borrowed.");
+        }
+        bookRepository.delete(book);
+    }
+
+    @Override
+    public BookDTO getBookById(Long id) {
+        return objectMapper.convertValue(bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found")), BookDTO.class);
     }
 
     @Override
     public List<BookDTO> getAllBooks() {
         return bookRepository.findAll().stream()
-                .map(book -> objectMapper.convertValue(book, BookDTO.class))
-                .collect(Collectors.toList());
+            .map(book -> objectMapper.convertValue(book, BookDTO.class))
+            .collect(Collectors.toList());
     }
 
     @Override
-    public BookDTO getBookById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        return objectMapper.convertValue(book, BookDTO.class);
+    public List<BookDTO> searchBooksByTitle(String title) {
+        return bookRepository.findAll().stream()
+            .filter(b -> b.getTitle().toLowerCase().contains(title.toLowerCase()))
+            .map(b -> objectMapper.convertValue(b, BookDTO.class))
+            .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+    public List<BookDTO> searchBooksByAuthor(String author) {
+        return bookRepository.findAll().stream()
+            .filter(b -> b.getAuthor().toLowerCase().contains(author.toLowerCase()))
+            .map(b -> objectMapper.convertValue(b, BookDTO.class))
+            .collect(Collectors.toList());
     }
 }

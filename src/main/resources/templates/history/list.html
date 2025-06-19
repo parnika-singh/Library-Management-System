@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/header :: *">
+<body>
+<h2>Currently Borrowed Books</h2>
+<table border="1">
+    <tr><th>Student</th><th>Book</th><th>Borrow Date</th></tr>
+    <tr th:each="item : ${borrowings}">
+        <td th:text="${item.studentId}"></td>
+        <td th:text="${item.bookId}"></td>
+        <td th:text="${item.borrowDate}"></td>
+    </tr>
+</table>
+</body>
+</html>

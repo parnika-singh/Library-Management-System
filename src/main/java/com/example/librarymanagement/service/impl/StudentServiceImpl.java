@@ -1,38 +1,71 @@
 package com.example.librarymanagement.service.impl;
 
+import com.example.librarymanagement.repository.StudentRepository;
+
+import com.example.librarymanagement.dto.StudentDTO;
+import com.example.librarymanagement.model.Student;
+import com.example.librarymanagement.exception.ResourceNotFoundException;
+import com.example.librarymanagement.service.interfaces.StudentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-public class BookServiceImpl implements BookService {
+public class StudentServiceImpl implements StudentService {
 
     @Autowired
-    private BookRepository bookRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Override
-    public BookDTO addBook(BookDTO bookDTO) {
-        Book book = objectMapper.convertValue(bookDTO, Book.class);
-        book.setAvailableQuantity(book.getQuantity());
-        Book saved = bookRepository.save(book);
-        return objectMapper.convertValue(saved, BookDTO.class);
+    public StudentDTO registerStudent(StudentDTO studentDTO) {
+        Student student = objectMapper.convertValue(studentDTO, Student.class);
+        return objectMapper.convertValue(studentRepository.save(student), StudentDTO.class);
     }
 
     @Override
-    public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll().stream()
-                .map(book -> objectMapper.convertValue(book, BookDTO.class))
-                .collect(Collectors.toList());
+    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+        Student student = studentRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        student.setName(studentDTO.getName());
+        student.setContact(studentDTO.getContact());
+        student.setRegistrationDate(studentDTO.getRegistrationDate());
+
+        return objectMapper.convertValue(studentRepository.save(student), StudentDTO.class);
     }
 
     @Override
-    public BookDTO getBookById(Long id) {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        return objectMapper.convertValue(book, BookDTO.class);
+    public void deleteStudent(Long id) {
+        Student student = studentRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        studentRepository.delete(student);
     }
 
     @Override
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+    public StudentDTO getStudentById(Long id) {
+        return objectMapper.convertValue(studentRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Student not found")), StudentDTO.class);
+    }
+
+    @Override
+    public List<StudentDTO> getAllStudents() {
+        return studentRepository.findAll().stream()
+            .map(student -> objectMapper.convertValue(student, StudentDTO.class))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentDTO> searchStudentsByName(String name) {
+        return studentRepository.findByNameContainingIgnoreCase(name).stream()
+            .map(student -> objectMapper.convertValue(student, StudentDTO.class))
+            .collect(Collectors.toList());
     }
 }

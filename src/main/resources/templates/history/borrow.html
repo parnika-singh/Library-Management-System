@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/header :: *">
+<body>
+<h2>Borrow Book</h2>
+<form th:action="@{/history/borrow}" th:object="${history}" method="post">
+    Student ID: <input type="number" th:field="*{studentId}"/><br/>
+    Book ID: <input type="number" th:field="*{bookId}"/><br/>
+    <button type="submit">Borrow</button>
+</form>
+</body>
+</html>
