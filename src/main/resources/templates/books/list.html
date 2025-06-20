@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/header :: *">
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
+<!-- <div  th:replace="fragments/header :: header"></div> -->
 <h2>Books</h2>
 <a href="/books/add">Add Book</a>
 <table border="1">
@@ -12,5 +13,6 @@
         <td><a th:href="@{'/books/delete/' + ${book.id}}">Delete</a></td>
     </tr>
 </table>
+<!-- <div th:replace="fragments/footer :: footer"></div> -->
 </body>
 </html>

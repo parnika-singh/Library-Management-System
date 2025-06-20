@@ -1,5 +1,6 @@
 package com.example.librarymanagement.service.impl;
 
+import com.example.librarymanagement.repository.HistoryRepository;
 import com.example.librarymanagement.repository.StudentRepository;
 
 import com.example.librarymanagement.dto.StudentDTO;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +21,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+    
+    @Autowired
+    private HistoryRepository historyRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -42,9 +47,18 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        boolean hasActiveBorrowings = historyRepository
+            .findByStudent(student).stream()
+            .anyMatch(history -> !history.isReturned());
+
+        if (hasActiveBorrowings) {
+            throw new IllegalStateException("Cannot delete student with active borrowed books.");
+        }
 
         studentRepository.delete(student);
     }
