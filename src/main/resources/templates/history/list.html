@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
 <body>
-<h2>Currently Borrowed Books</h2>
-<table border="1">
-    <tr><th>Student</th><th>Book</th><th>Borrow Date</th></tr>
-    <tr th:each="item : ${borrowings}">
-        <td th:text="${item.studentId}"></td>
-        <td th:text="${item.bookId}"></td>
-        <td th:text="${item.borrowDate}"></td>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<h2>Current Borrowed Books</h2>
+<table class="table table-striped">
+    <thead><tr><th>Student ID</th><th>Book ID</th><th>Borrow Date</th><th>Return</th></tr></thead>
+    <tbody>
+    <tr th:each="borrow : ${borrowings}">
+        <td th:text="${borrow.studentId}"></td>
+        <td th:text="${borrow.bookId}"></td>
+        <td th:text="${borrow.borrowDate}"></td>
+        <td>
+            <form th:action="@{/history/return}" method="post">
+                <input type="hidden" name="studentId" th:value="${borrow.studentId}"/>
+                <input type="hidden" name="bookId" th:value="${borrow.bookId}"/>
+                <button class="btn btn-sm btn-success">Return</button>
+            </form>
+        </td>
     </tr>
+    </tbody>
 </table>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

@@ -45,13 +45,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(Long id) {
-        Book book = bookRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found"));
-        if (book.getAvailableQuantity() < book.getQuantity()) {
-            throw new RuntimeException("Cannot delete book while it is borrowed.");
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid book ID for deletion");
         }
+
+        Book book = bookRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with ID: " + id));
+
+        if (book.getAvailableQuantity() < book.getQuantity()) {
+            throw new RuntimeException("Cannot delete book while it is currently borrowed.");
+        }
+
         bookRepository.delete(book);
     }
+
 
     @Override
     public BookDTO getBookById(Long id) {
@@ -81,4 +88,23 @@ public class BookServiceImpl implements BookService {
             .map(b -> objectMapper.convertValue(b, BookDTO.class))
             .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BookDTO> searchBooks(String query) {
+        List<Book> results = bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(query, query);
+        return results.stream()
+                  .map(book -> objectMapper.convertValue(book, BookDTO.class))
+                  .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookDTO> getAllAvailableBooks() {
+        List<Book> availableBooks = bookRepository.findByAvailableQuantityGreaterThan(0);
+
+        return availableBooks.stream()
+                .map(book -> objectMapper.convertValue(book, BookDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

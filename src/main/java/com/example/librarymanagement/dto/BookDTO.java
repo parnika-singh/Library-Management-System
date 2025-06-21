@@ -1,7 +1,5 @@
 package com.example.librarymanagement.dto;
 
-//import java.time.LocalDate;
-
 public class BookDTO {
     private Long id;
     private String title;

@@ -77,9 +77,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDTO> searchStudentsByName(String name) {
-        return studentRepository.findByNameContainingIgnoreCase(name).stream()
-            .map(student -> objectMapper.convertValue(student, StudentDTO.class))
-            .collect(Collectors.toList());
-    }
+    public List<StudentDTO> searchStudentsByName(String query) {
+        List<Student> results = studentRepository.findByNameContainingIgnoreCase(query);
+    return results.stream()
+                  .map(student -> objectMapper.convertValue(student, StudentDTO.class))
+                  .collect(Collectors.toList());
+}
+
 }

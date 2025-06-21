@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
 <body>
-<h2>Borrow Book</h2>
-<form th:action="@{/history/borrow}" th:object="${history}" method="post">
-    Student ID: <input type="number" th:field="*{studentId}"/><br/>
-    Book ID: <input type="number" th:field="*{bookId}"/><br/>
-    <button type="submit">Borrow</button>
-</form>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h2 class="mb-4">📖 Borrow Book</h2>
+
+    <!-- Borrow Form -->
+    <form th:action="@{/history/borrow}" method="post" class="card p-4 shadow-sm">
+        <div class="mb-3">
+            <label for="studentId" class="form-label">Enter Student ID</label>
+            <input type="number" name="studentId" class="form-control" placeholder="e.g., 101" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="bookId" class="form-label">Enter Book ID</label>
+            <input type="number" name="bookId" class="form-control" placeholder="e.g., 5" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">📚 Borrow</button>
+    </form>
+
+    <!-- Available Books -->
+    <div class="mt-5">
+        <h4>Available Books</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-3 mt-2">
+            <div class="col" th:each="book : ${books}">
+                <div class="card h-100 shadow-sm p-3">
+                    <h5 th:text="${book.title}">Book Title</h5>
+                    <p><strong>Author:</strong> <span th:text="${book.author}">Author</span></p>
+                    <p><strong>ID:</strong> <span th:text="${book.id}"></span></p>
+                    <p><strong>Available:</strong> <span th:text="${book.availableQuantity}"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

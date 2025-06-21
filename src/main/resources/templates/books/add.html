@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Library</title>
-</head>
-<h2>Add New Book</h2>
-<form th:action="@{/books/add}" th:object="${book}" method="post">
-    Title: <input type="text" th:field="*{title}"/><br/>
-    Author: <input type="text" th:field="*{author}"/><br/>
-    ISBN: <input type="text" th:field="*{isbn}"/><br/>
-    Quantity: <input type="number" th:field="*{quantity}"/><br/>
-    <button type="submit">Add Book</button>
-</form>
+<head th:replace="~{fragments/header :: header}"></head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 
+<div class="container mt-4">
+<h2>Add Book</h2>
+<form class="p-4 shadow-sm bg-light rounded" th:action="@{/books/add}" th:object="${book}" method="post">
+    <div class="mb-3"><label class="form-label">Title</label>
+        <input type="text" th:field="*{title}" class="form-control"/></div>
+    <div class="mb-3"><label class="form-label">Author</label>
+        <input type="text" th:field="*{author}" class="form-control"/></div>
+    <div class="mb-3"><label class="form-label">ISBN</label>
+        <input type="text" th:field="*{isbn}" class="form-control"/></div>
+    <div class="mb-3"><label class="form-label">Quantity</label>
+        <input type="number" th:field="*{quantity}" class="form-control"/></div>
+    <button class="btn btn-success">Save</button>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</form>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

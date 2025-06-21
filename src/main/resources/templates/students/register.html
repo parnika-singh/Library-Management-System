@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <h2>Register Student</h2>
-<form th:action="@{/students/register}" th:object="${student}" method="post">
-    Name: <input type="text" th:field="*{name}"/><br/>
-    Contact: <input type="text" th:field="*{contact}"/><br/>
-    Registration Date: <input type="date" th:field="*{registrationDate}"/><br/>
-    <button type="submit">Register</button>
+<form th:action="@{/students/register}" th:object="${student}" method="post" class="bg-light p-4 rounded shadow-sm">
+    <div class="mb-3"><label>Name</label><input type="text" class="form-control" th:field="*{name}"/></div>
+    <div class="mb-3"><label>Contact</label><input type="text" class="form-control" th:field="*{contact}"/></div>
+    <div class="mb-3"><label>Registration Date</label><input type="date" class="form-control" th:field="*{registrationDate}"/></div>
+    <button class="btn btn-success">Register</button>
 </form>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

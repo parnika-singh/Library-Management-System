@@ -1,0 +1,40 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.card {
+    transition: transform 0.2s ease;
+    border-radius: 8px;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.btn {
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.table {
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+input.form-control, select.form-select {
+    border-radius: 10px;
+}
+
+body { background: #f0f2f5; }
+.card, .form-control, .btn { border-radius: 12px; }
+.navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.btn-primary { transition: background .3s; }
+.btn-primary:hover { background: #004085; }
+.table > tbody > tr:nth-child(odd) { background: #ffffff; }

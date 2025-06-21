@@ -1,18 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header}"></head>
 <body>
-<!-- <div  th:replace="fragments/header :: header"></div> -->
-<h2>Books</h2>
-<a href="/books/add">Add Book</a>
-<table border="1">
-    <tr><th>Title</th><th>Author</th><th>Available</th><th>Action</th></tr>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.title}"></td>
-        <td th:text="${book.author}"></td>
-        <td th:text="${book.availableQuantity}"></td>
-        <td><a th:href="@{'/books/delete/' + ${book.id}}">Delete</a></td>
-    </tr>
-</table>
-<!-- <div th:replace="fragments/footer :: footer"></div> -->
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container mt-4">
+    <h2 class="mb-4">📚 Library Books</h2>
+
+    <!-- Search Form -->
+    <form th:action="@{/books/search}" method="get" class="row g-3 mb-3">
+        <div class="col-auto">
+            <input type="text" name="query" th:value="${query}" class="form-control" placeholder="Search by title or author">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">🔍 Search</button>
+        </div>
+        <div class="col-auto" th:if="${query}">
+            <a href="/books" class="btn btn-outline-secondary">❌ Clear</a>
+        </div>
+    </form>
+
+    <a href="/books/add" class="btn btn-success mb-4">➕ Add New Book</a>
+
+    <!-- Book Grid Album Style -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="book : ${books}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${book.title}">Book Title</h5>
+                    <p class="card-text"><strong>Author:</strong> <span th:text="${book.author}">Author Name</span></p>
+                    <p class="card-text"><strong>ISBN:</strong> <span th:text="${book.isbn}">123456</span></p>
+                    <p class="card-text">
+                        <strong>Available:</strong>
+                        <span th:text="${book.availableQuantity}"></span> / <span th:text="${book.quantity}"></span>
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    <a th:href="@{'/books/edit/' + ${book.id}}" class="btn btn-sm btn-outline-warning me-1">✏️ Edit</a>
+                    <a th:href="@{'/books/delete/' + ${book.id}}" class="btn btn-danger btn-sm">🗑️ Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- If no books found -->
+    <div th:if="${#lists.isEmpty(books)}" class="alert alert-info mt-4 text-center">
+        No books found. Try searching with a different keyword or <a href="/books/add">add a new book</a>.
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
