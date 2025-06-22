@@ -97,7 +97,12 @@ public class HistoryServiceImpl implements HistoryService {
     public List<HistoryDTO> getCurrentBorrowedBooks() {
         return historyRepository.findAll().stream()
             .filter(h -> !h.isReturned())
-            .map(h -> objectMapper.convertValue(h, HistoryDTO.class))
+            .map(h -> {
+                HistoryDTO dto = objectMapper.convertValue(h, HistoryDTO.class);
+                dto.setStudentName(h.getStudent().getName()); // manually set
+                dto.setBookTitle(h.getBook().getTitle());     // manually set
+                return dto;
+            })
             .collect(Collectors.toList());
     }
 

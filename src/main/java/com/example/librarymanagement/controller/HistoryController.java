@@ -1,13 +1,13 @@
 package com.example.librarymanagement.controller;
 
+import com.example.librarymanagement.dto.HistoryDTO;
+import com.example.librarymanagement.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-//import com.example.librarymanagement.dto.HistoryDTO;
-import com.example.librarymanagement.service.interfaces.HistoryService;
-import com.example.librarymanagement.service.interfaces.BookService;
+import java.util.List;
 
 @Controller
 @RequestMapping("/history")
@@ -19,26 +19,68 @@ public class HistoryController {
     @Autowired
     private BookService bookService;
 
+    //@Autowired
+    //private StudentService studentService;
+
+    // Show list of borrowed books
+    @GetMapping("/list")
+    public String viewBorrowedBooks(Model model) {
+        List<HistoryDTO> borrowings = historyService.getCurrentBorrowedBooks();
+        model.addAttribute("borrowings", borrowings);
+        return "history/list";
+    }
+
+    // Show borrow form
     @GetMapping("/borrow")
-    public String borrowForm(Model model) {
-        model.addAttribute("books", bookService.getAllAvailableBooks());
+    public String showBorrowForm(Model model) {
+        model.addAttribute("borrowDTO", new HistoryDTO());
+        model.addAttribute("availableBooks", bookService.getAllAvailableBooks());
         return "history/borrow";
     }
 
-
+    // Process borrow
     @PostMapping("/borrow")
-    public String borrow(@RequestParam Long studentId, @RequestParam Long bookId) {
-        if (studentId == null || bookId == null) {
-            throw new IllegalArgumentException("Student ID and Book ID must be provided");
+    public String borrowBook(@ModelAttribute("borrowDTO") HistoryDTO historyDTO, Model model) {
+        try {
+            historyService.borrowBook(historyDTO.getStudentId(), historyDTO.getBookId());
+            return "redirect:/history/list";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("borrowDTO", new HistoryDTO());
+            model.addAttribute("availableBooks", bookService.getAllAvailableBooks());
+            return "history/borrow";
         }
-
-        historyService.borrowBook(studentId, bookId);
-        return "redirect:/history/list";
     }
 
-    @GetMapping("/list")
-    public String listBorrowings(Model model) {
-        model.addAttribute("borrowings", historyService.getCurrentBorrowedBooks());
-        return "history/list";
+    // Show return form
+    @GetMapping("/return")
+    public String showReturnForm(Model model) {
+        model.addAttribute("returnDTO", new HistoryDTO());
+        return "history/return";
     }
+
+    // Process return
+    @PostMapping("/return")
+    public String returnBook(@ModelAttribute("returnDTO") HistoryDTO historyDTO, Model model) {
+        try {
+            historyService.returnBook(historyDTO.getStudentId(), historyDTO.getBookId());
+            return "redirect:/history/list";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "history/return";
+        }
+    }
+
+
+    @GetMapping("/return/{studentId}/{bookId}")
+    public String returnBookViaGet(@PathVariable Long studentId, @PathVariable Long bookId, Model model) {
+        try {
+            historyService.returnBook(studentId, bookId);
+            return "redirect:/history/list";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            return "error/general";
+        }
+    }
+
 }

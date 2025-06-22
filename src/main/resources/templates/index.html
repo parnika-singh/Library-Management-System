@@ -5,14 +5,15 @@
 
 <div th:replace="~{fragments/navbar :: navbar}"></div>
 
-<div class="container mt-4">
-    <h1 class="text-center">Welcome to the Library System</h1>
+<div class="center-container">
+    <h1>📚 Welcome to the Library System</h1>
+    <div class="btn-group">
+        <a href="/books" class="btn btn-primary">Manage Books</a>
+        <a href="/students" class="btn btn-success">Manage Students</a>
+        <a href="/history/list" class="btn btn-warning">View Borrowed</a>
+    </div>
 </div>
-<div class="text-center mt-4">
-    <a href="/books" class="btn btn-primary mx-2">Manage Books</a>
-    <a href="/students" class="btn btn-success mx-2">Manage Students</a>
-    <a href="/history/list" class="btn btn-warning mx-2">View Borrowed</a>
-</div>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

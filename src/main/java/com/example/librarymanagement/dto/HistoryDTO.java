@@ -1,53 +1,72 @@
 package com.example.librarymanagement.dto;
 
+import java.time.LocalDate;
+
 public class HistoryDTO {
     private Long id;
     private Long studentId;
     private Long bookId;
-    private String borrowDate;
-    private String returnDate;
+    private String studentName;
+    private String bookTitle;
+    private LocalDate borrowDate;
+    private LocalDate returnDate;
     private boolean returned;
 
     public HistoryDTO() {}
 
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getStudentId() {
         return studentId;
     }
-
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
+    }
+
+    public String getStudentName() {
+        return studentName;
+    }
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public Long getBookId() {
         return bookId;
     }
-
     public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 
-    public String getBorrowDate() {
-        return borrowDate;
+    public String getBookTitle() {
+        return bookTitle;
+    }
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 
-    public void setBorrowDate(String borrowDate) {
+    public LocalDate getBorrowDate() {
+        return borrowDate;
+    }
+    public void setBorrowDate(LocalDate borrowDate) {
         this.borrowDate = borrowDate;
     }
 
-    public boolean isReturned() { 
-        return returned; 
+    public LocalDate getReturnDate() {
+        return returnDate;
     }
-    public void setReturned(boolean returned) { 
-        this.returned = returned; 
-    }
-
-    public Long getId() {
-        return id;
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate = returnDate;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean isReturned() {
+        return returned;
     }
-
-    
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
 }

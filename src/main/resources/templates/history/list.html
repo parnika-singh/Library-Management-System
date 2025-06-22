@@ -3,24 +3,36 @@
 <head th:replace="~{fragments/header :: header}"></head>
 <body>
 <div th:replace="~{fragments/navbar :: navbar}"></div>
-<h2>Current Borrowed Books</h2>
-<table class="table table-striped">
-    <thead><tr><th>Student ID</th><th>Book ID</th><th>Borrow Date</th><th>Return</th></tr></thead>
-    <tbody>
-    <tr th:each="borrow : ${borrowings}">
-        <td th:text="${borrow.studentId}"></td>
-        <td th:text="${borrow.bookId}"></td>
-        <td th:text="${borrow.borrowDate}"></td>
-        <td>
-            <form th:action="@{/history/return}" method="post">
-                <input type="hidden" name="studentId" th:value="${borrow.studentId}"/>
-                <input type="hidden" name="bookId" th:value="${borrow.bookId}"/>
-                <button class="btn btn-sm btn-success">Return</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+
+<div class="container mt-4">
+    <h2>📚 Current Borrowed Books</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Book Title</th>
+                <th>Borrowed On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:each="borrow : ${borrowings}">
+            <td th:text="${borrow.studentName}">Student Name</td>
+            <td th:text="${borrow.bookTitle}">Book Title</td>
+            <td th:text="${borrow.borrowDate}">2025-06-22</td>
+            <td>
+                <a th:href="@{'/history/return/' + ${borrow.studentId} + '/' + ${borrow.bookId}}" 
+                class="btn btn-sm btn-success"
+                onclick="return confirm('Are you sure you want to return this book?')">
+                🔁 Return
+                </a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

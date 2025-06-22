@@ -1,7 +1,15 @@
 package com.example.librarymanagement.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "books")
@@ -23,7 +31,7 @@ public class Book {
     @Column(name = "available_quantity")
     private int availableQuantity;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -31,12 +39,12 @@ public class Book {
 
     public Book() {}
     
-    //@PrePersist hook
+    @PrePersist
     protected void onCreate() {
         createdAt = updatedAt = LocalDateTime.now();
     }
 
-    //@PreUpdate hook
+    @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
@@ -96,5 +104,15 @@ public class Book {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    
 
 }

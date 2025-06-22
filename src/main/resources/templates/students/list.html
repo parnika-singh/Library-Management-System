@@ -21,6 +21,7 @@
         <td th:text="${student.contact}"></td>
         <td th:text="${student.registrationDate}"></td>
         <td>
+            <a th:href="@{'/students/edit/' + ${student.id}}" class="btn btn-sm btn-outline-warning me-1">✏️ Edit</a>
             <a th:href="@{'/students/delete/' + ${student.id}}" class="btn btn-danger btn-sm">🗑️ Delete</a>
         </td>
 
